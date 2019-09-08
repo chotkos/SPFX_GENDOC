@@ -1,0 +1,31 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/core-build/serve.schema.json",
+  "port": 4321,
+  "https": true,
+  "serveConfigurations": {
+    "default": {
+      "pageUrl": "https://chotkos.sharepoint.com/Lists/Gen_Invoice/AllItems.aspx",
+      "customActions": {
+        "d1057701-3591-4e9d-89e8-78b1f003f5cb": {
+          "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
+          "properties": {
+            "sampleTextOne": "One item is selected in the list",
+            "sampleTextTwo": "This command is always visible."
+          }
+        }
+      }
+    },
+    "genDoc": {
+      "pageUrl": "https://chotkos.sharepoint.com/Lists/Gen_Invoice/AllItems.aspx",
+      "customActions": {
+        "d1057701-3591-4e9d-89e8-78b1f003f5cb": {
+          "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
+          "properties": {
+            "sampleTextOne": "One item is selected in the list",
+            "sampleTextTwo": "This command is always visible."
+          }
+        }
+      }
+    }
+  }
+}

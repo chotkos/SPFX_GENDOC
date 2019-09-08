@@ -1,0 +1,21 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/command-set-extension-manifest.schema.json",
+
+  "id": "d1057701-3591-4e9d-89e8-78b1f003f5cb",
+  "alias": "GenDocCommandSet",
+  "componentType": "Extension",
+  "extensionType": "ListViewCommandSet",
+ 
+  "version": "*",
+  "manifestVersion": 2,
+ 
+  "requiresCustomScript": false,
+
+  "items": {
+    "COMMAND_1": {
+      "title": { "default": "Print document" },
+      "iconImageUrl": "https://image.flaticon.com/icons/svg/61/61764.svg",
+      "type": "command"
+    }
+  }
+}

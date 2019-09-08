@@ -1,0 +1,16 @@
+
+.CustomPanel{
+    
+
+    :global{
+        @import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+    }
+    
+    :global{ @import 'node_modules/office-ui-fabric-react/dist/css/fabric.css'; }
+
+
+    .clear {
+        clear: both;
+    }
+
+}
