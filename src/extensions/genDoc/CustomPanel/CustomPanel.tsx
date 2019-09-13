@@ -66,6 +66,7 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
     @autobind
     private _hideConfigPanel(){
         this.setState({showConfiguration:false});
+        this.initTemplates();
     }
 
     @autobind
@@ -106,8 +107,7 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
                                 options={this.state.optionsTemplates}
                                 label={"Choose template:"}
                                 onChanged={this.changedTemplate}  
-                                defaultSelectedKey={''}                              
-                            />
+                                defaultSelectedKey={''} />
                             <br/>
                         </div>
                     </div>

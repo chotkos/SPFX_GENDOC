@@ -6,8 +6,12 @@ import ReactQuill from 'react-quill'; // ES6
 import 'react-quill/dist/quill.snow.css'; // ES6
 import styles from './Configurations.module.scss'; 
 import { Dialog } from '@microsoft/sp-dialog';
+import TemplateService from '../../services/TemplateService';
 
 export default class Configuration extends React.Component<IConfigurationProps, IConfigurationState> {
+
+    
+    private templateService = new TemplateService();
 
     modules = {
         toolbar: [
@@ -35,7 +39,7 @@ export default class Configuration extends React.Component<IConfigurationProps, 
         this.state = {
             template: props.template,
             templateName: props.template ? props.template.Title : '',
-            templateContent:"",
+            templateContent:props.template ? props.template.Template : '',
             fields:[
                 {title:'Title', name: 'Title'},                
                 {title:'Created By', name: 'CreatedBy'},
@@ -58,7 +62,32 @@ export default class Configuration extends React.Component<IConfigurationProps, 
 
     @autobind
     private _saveConfig(){
-        //@TODO: saving pnp
+        //@TODO: saving pnp        
+        let updateModel = this.state.template;
+        updateModel.Title = this.state.templateName;
+        updateModel.Template = this.state.templateContent;
+
+        this.templateService.UpdateTemplate(updateModel).then(r=>{if(r){
+            this._closePanel();
+        }else{
+            alert('Failed to save');
+        }});        
+    }
+ 
+
+    @autobind
+    private _createConfig(){        
+        //@TODO: saving pnp        
+        let createModel = {
+            Title : this.state.templateName,
+            Template : this.state.templateContent
+        }
+
+        this.templateService.CreateTemplate(createModel).then(r=>{if(r){
+            this._closePanel();
+        }else{
+            alert('Failed to save');
+        }});  
     }
 
     @autobind
@@ -87,7 +116,7 @@ export default class Configuration extends React.Component<IConfigurationProps, 
         this.setState({
             template:nextProps.template,
             templateName: nextProps.template ? nextProps.template.Title : '',
-            templateContent:"",
+            templateContent: nextProps.template ? nextProps.template.Template : '',
         });
 
     }
@@ -101,6 +130,7 @@ export default class Configuration extends React.Component<IConfigurationProps, 
                         <TextField 
                             label="Layout name:" 
                             value={this.state.templateName}
+                            onChanged={v=>this.setState({templateName:v})}
                         />
                         <br/>
                     </div>
@@ -135,7 +165,8 @@ export default class Configuration extends React.Component<IConfigurationProps, 
                     <div className="ms-Grid-row">
                         <div className="ms-Grid-col ms-md12">
                             <DefaultButton text="Printing" onClick={this._closePanel} iconProps={{iconName:'Back'}}/> 
-                            <PrimaryButton text="Save template" onClick={this._saveConfig} iconProps={{iconName:'Save'}} />
+                            {this.state.template && <PrimaryButton text="Save template" onClick={this._saveConfig} iconProps={{iconName:'Save'}} />}
+                            {!this.state.template && <PrimaryButton text="Create template" onClick={this._createConfig} iconProps={{iconName:'Save'}} />}
                         </div>
                     </div>
                 </DialogFooter>
