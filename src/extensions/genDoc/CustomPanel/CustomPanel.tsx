@@ -4,6 +4,9 @@ import { TextField, DefaultButton, PrimaryButton, DialogFooter, autobind, Panel,
 import s from './CustomPanel.module.scss'
 import Configuration from '../Configuration/Configurations';
 import TemplateService from '../../services/TemplateService';
+import ReactHtmlParser from 'react-html-parser';
+import ReactQuill from 'react-quill'; // ES6
+import 'react-quill/dist/quill.snow.css'; // ES6
 
 export interface ICustomPanelState {
     saving: boolean;
@@ -117,6 +120,14 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
                         </div>
                         <div className="ms-Grid-col ms-md6" style={{textAlign:"right"}}>
                             <PrimaryButton text="Print" onClick={this._onPrint} iconProps={{iconName:'Print'}} />
+                        </div>
+                    </div> 
+                    <br/>
+                    <div className="ms-Grid-row">
+                        <div className="ql-container ql-snow">
+                            <div className="ql-editor">
+                                {this.state.selectedTemplate!=null && ReactHtmlParser(this.state.selectedTemplate.Template)}
+                            </div>
                         </div>
                     </div>
                 </div>

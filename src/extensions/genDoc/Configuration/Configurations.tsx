@@ -7,11 +7,13 @@ import 'react-quill/dist/quill.snow.css'; // ES6
 import styles from './Configurations.module.scss'; 
 import { Dialog } from '@microsoft/sp-dialog';
 import TemplateService from '../../services/TemplateService';
+import ItemsService from '../../services/ItemsService';
 
 export default class Configuration extends React.Component<IConfigurationProps, IConfigurationState> {
 
     
     private templateService = new TemplateService();
+    private itemsService = new ItemsService();
 
     modules = {
         toolbar: [
@@ -40,24 +42,25 @@ export default class Configuration extends React.Component<IConfigurationProps, 
             template: props.template,
             templateName: props.template ? props.template.Title : '',
             templateContent:props.template ? props.template.Template : '',
-            fields:[
-                {title:'Title', name: 'Title'},                
-                {title:'Created By', name: 'CreatedBy'},
-                {title:'Price', name: 'Price'},
-                {title:'Title', name: 'Title'},
-                {title:'Created By', name: 'CreatedBy'},
-                {title:'Price', name: 'Price'},
-                {title:'Title', name: 'Title'},
-                {title:'Created By', name: 'CreatedBy'},
-                {title:'Price', name: 'Price'},
-                {title:'Title', name: 'Title'},
-                {title:'Created By', name: 'CreatedBy'},
-                {title:'Price', name: 'Price'},
-            ]
-
+            fields:[]
         };    
     
         this.quillRef = React.createRef();
+
+        this.setupFields();
+    }
+
+    @autobind
+    private setupFields(){
+        this.itemsService.GetAllFields().then((fields:any[])=>{
+            console.log(fields);
+            
+            let newFields = fields.map(f=>{
+                return {title: f.Title, name:f.InternalName};
+            });
+
+            this.setState({fields: newFields});
+        });
     }
 
     @autobind
@@ -126,41 +129,37 @@ export default class Configuration extends React.Component<IConfigurationProps, 
         return (                 
             <div className={"ms-Grid "+styles.Configurations}>
                 <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-md8">
-                        <TextField 
-                            label="Layout name:" 
-                            value={this.state.templateName}
-                            onChanged={v=>this.setState({templateName:v})}
-                        />
-                        <br/>
+                    <div className="ms-Grid-col ms-md8"> 
+                            <TextField 
+                                label="Layout name:" 
+                                value={this.state.templateName}
+                                onChanged={v=>this.setState({templateName:v})}
+                            />  
+                            <br/>
+                            <ReactQuill 
+                                value={this.state.templateContent}
+                                onChange={this.quillChange}
+                                modules={this.modules} 
+                                formats={this.formats}
+                                className={styles.quillEdit}   
+                                ref={this.quillRef}                         
+                            /> 
                     </div>
-                </div>
-                <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-md8">
-                        <ReactQuill 
-                            value={this.state.templateContent}
-                            onChange={this.quillChange}
-                            modules={this.modules} 
-                            formats={this.formats}
-                            className={styles.quillEdit}   
-                            ref={this.quillRef}                         
-                        />
-                    </div> 
                     <div className="ms-Grid-col ms-md4">
-                        <h2>Fields:</h2> 
+                        <p>Fields:</p> 
                         <div className="ms-Grid-row">
-                        {this.state.fields.map(f=>{
-                            return <div className={styles.inlineBtn +" ms-Grid-col ms-md6"}>
-                                        <PrimaryButton 
-                                            style={{width:"100%"}}
-                                            onClick={(d)=>{this.fieldClick(f)}}
-                                            text={f.title} 
-                                            iconProps={{iconName:"Add"}} />
-                                    </div>
-                        })}
+                            {this.state.fields.map(f=>{
+                                return <div className={styles.inlineBtn +" ms-Grid-col ms-md6"}>
+                                            <PrimaryButton 
+                                                style={{width:"100%"}}
+                                                onClick={(d)=>{this.fieldClick(f)}}
+                                                text={f.title} 
+                                                iconProps={{iconName:"Add"}} />
+                                        </div>
+                            })}
                         </div>
                     </div>
-                </div> 
+                </div>
                 <DialogFooter>
                     <div className="ms-Grid-row">
                         <div className="ms-Grid-col ms-md12">
