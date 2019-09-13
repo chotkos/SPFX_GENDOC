@@ -78,28 +78,20 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
    
 
     @autobind
-    private _onConfiguration() {
-        //this.props.onClose();
+    private _onConfiguration() { 
         this.setState({showConfiguration:true})
     }
 
     @autobind
     private _hideConfigPanel(){
-        this.setState({showConfiguration:false});
-        this.initTemplates();
+        this.setState({
+            showConfiguration:false,
+            selectedKey:null,
+            selectedTemplate:null,
+        }), this.forceUpdate;
+        this.initTemplates();        
     }
-
-    @autobind
-    private _onPrint() {
-        /*this.setState({ saving: true });
-        sp.web.lists.getById(this.props.listId).items.getById(this.props.itemId).update({
-            'Title': this.editedTitle
-        }).then(() => {
-            this.setState({ saving: false });
-            this.props.onClose();
-        });*/
-    }
-
+ 
     @autobind
     private changedTemplate(newValue){
         let selectedTemplate = this.state.allTemplates.filter(x=>{return x.ID == newValue.key})[0];
