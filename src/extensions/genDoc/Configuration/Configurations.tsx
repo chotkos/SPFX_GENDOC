@@ -33,7 +33,8 @@ export default class Configuration extends React.Component<IConfigurationProps, 
     constructor(props: IConfigurationProps) {
         super(props);
         this.state = {
-            templateName:"Invoice",
+            template: props.template,
+            templateName: props.template ? props.template.Title : '',
             templateContent:"",
             fields:[
                 {title:'Title', name: 'Title'},                
@@ -81,6 +82,16 @@ export default class Configuration extends React.Component<IConfigurationProps, 
             //One day I will implement nice alert here :)
         }
     }
+
+    componentWillReceiveProps(nextProps){
+        this.setState({
+            template:nextProps.template,
+            templateName: nextProps.template ? nextProps.template.Title : '',
+            templateContent:"",
+        });
+
+    }
+    
 
     public render(): React.ReactElement<IConfigurationProps> {
         return (                 

@@ -3,10 +3,15 @@ import { TextField, DefaultButton, PrimaryButton, DialogFooter, autobind, Panel,
 //import { sp } from "@pnp/sp";
 import s from './CustomPanel.module.scss'
 import Configuration from '../Configuration/Configurations';
+import TemplateService from '../../services/TemplateService';
 
 export interface ICustomPanelState {
     saving: boolean;
     showConfiguration:boolean,
+    allTemplates: any[];
+    optionsTemplates:[];
+    selectedKey: string;
+    selectedTemplate: any;
 }
 
 export interface ICustomPanelProps {
@@ -20,19 +25,37 @@ export interface ICustomPanelProps {
 export default class CustomPanel extends React.Component<ICustomPanelProps, ICustomPanelState> {
 
     private editedTitle: string = null;
+    private templateService = new TemplateService();
 
     constructor(props: ICustomPanelProps) {
         super(props);
+
         this.state = {
             saving: false,
-            showConfiguration:false
+            showConfiguration:false,
+            allTemplates:[],
+            optionsTemplates:[],
+            selectedKey:null,
+            selectedTemplate:null,
         };
-    }
 
-    @autobind
-    private _onTitleChanged(title: string) {
-        this.editedTitle = title;
+        this.initTemplates();
     }
+ 
+    @autobind
+    initTemplates(){
+        this.templateService.GetAllTemplates().then(templates=>{
+
+            let options = templates.map((x)=>{return {key: x.ID, text:x.Title};})
+            options.push({key:'',text:'New template'});
+
+            this.setState({
+                allTemplates: templates,
+                optionsTemplates: options,
+            })
+        });
+    }
+   
 
     @autobind
     private _onConfiguration() {
@@ -56,6 +79,17 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
         });*/
     }
 
+    @autobind
+    private changedTemplate(newValue){
+        let selectedTemplate = this.state.allTemplates.filter(x=>{return x.ID == newValue.key})[0];
+
+        this.setState({
+            selectedKey: newValue.key, 
+            selectedTemplate: selectedTemplate, 
+            showConfiguration: false
+        }, this.forceUpdate);
+    }
+
     public render(): React.ReactElement<ICustomPanelProps> {
         let { isOpen, currentTitle } = this.props;
         return (
@@ -69,8 +103,10 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
                     <div className="ms-Grid-row">
                         <div className="ms-Grid-col ms-md12">
                             <Dropdown
-                                options={[]}
+                                options={this.state.optionsTemplates}
                                 label={"Choose template:"}
+                                onChanged={this.changedTemplate}  
+                                defaultSelectedKey={''}                              
                             />
                             <br/>
                         </div>
@@ -91,7 +127,7 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
                     headerText="Template configuration">
                     <Configuration
                         onClose={this._hideConfigPanel}
-                        template={null}
+                        template={this.state.selectedTemplate}
                     />
                 </Panel>
             </Panel>

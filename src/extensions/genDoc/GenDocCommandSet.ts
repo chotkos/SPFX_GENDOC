@@ -14,6 +14,9 @@ import CustomPanel, { ICustomPanelProps } from './CustomPanel/CustomPanel';
 
 import * as React from 'react';
 import * as ReactDom from 'react-dom';	
+import {
+  sp
+} from "@pnp/sp";
 
 /**
  * If your command set uses the ClientSideComponentProperties JSON input,
@@ -36,13 +39,15 @@ export default class GenDocCommandSet extends BaseListViewCommandSet<IGenDocComm
   public onInit(): Promise<void> {
     Log.info(LOG_SOURCE, 'Initialized GenDocCommandSet');
 
-
-    // Setup the PnP JS with SPFx context	    
-    // sp.setup({spfxContext: this.context});
-
+  
+    
     this.panelPlaceHolder = document.body.appendChild(document.createElement("div"));	
+  
 
-    return Promise.resolve();
+    //return Promise.resolve();
+    return super.onInit().then(_ => {      
+      sp.setup({spfxContext: this.context});
+    });
   }
 
   @override
