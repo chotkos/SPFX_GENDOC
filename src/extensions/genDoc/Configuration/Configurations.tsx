@@ -146,7 +146,7 @@ export default class Configuration extends React.Component<IConfigurationProps, 
                             /> 
                     </div>
                     <div className="ms-Grid-col ms-md4">
-                        <div className="ms-Label root-470">Fields:</div> 
+                        <div className={"ms-Label "+styles.headerLabel}>Fields:</div> 
                         <div className="ms-Grid-row">
                             {this.state.fields.map(f=>{
                                 return <div className={styles.inlineBtn +" ms-Grid-col ms-md6"}>
