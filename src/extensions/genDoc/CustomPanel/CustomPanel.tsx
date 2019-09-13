@@ -7,6 +7,8 @@ import TemplateService from '../../services/TemplateService';
 import ReactHtmlParser from 'react-html-parser';
 import ReactQuill from 'react-quill'; // ES6
 import 'react-quill/dist/quill.snow.css'; // ES6
+import ItemsService from '../../services/ItemsService';
+import ReactToPrint from "react-to-print";
 
 export interface ICustomPanelState {
     saving: boolean;
@@ -15,6 +17,8 @@ export interface ICustomPanelState {
     optionsTemplates:[];
     selectedKey: string;
     selectedTemplate: any;
+    currentItem: any;
+    filledTemplate: string;
 }
 
 export interface ICustomPanelProps {
@@ -26,9 +30,11 @@ export interface ICustomPanelProps {
 }
 
 export default class CustomPanel extends React.Component<ICustomPanelProps, ICustomPanelState> {
-
-    private editedTitle: string = null;
+    
     private templateService = new TemplateService();
+    private itemsService = new ItemsService();
+
+    previewRef=null;
 
     constructor(props: ICustomPanelProps) {
         super(props);
@@ -40,9 +46,12 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
             optionsTemplates:[],
             selectedKey:null,
             selectedTemplate:null,
+            currentItem:null,
+            filledTemplate:'',
         };
 
         this.initTemplates();
+        this.getListItem();
     }
  
     @autobind
@@ -57,6 +66,14 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
                 optionsTemplates: options,
             })
         });
+    }
+
+    @autobind
+    getListItem(){
+        this.itemsService.GetListItemById(this.props.itemId)
+            .then((item):any=>{
+                this.setState({currentItem: item});
+            });
     }
    
 
@@ -87,11 +104,30 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
     private changedTemplate(newValue){
         let selectedTemplate = this.state.allTemplates.filter(x=>{return x.ID == newValue.key})[0];
 
+
         this.setState({
             selectedKey: newValue.key, 
             selectedTemplate: selectedTemplate, 
             showConfiguration: false
         }, this.forceUpdate);
+
+        
+        this.itemsService.GetAllFields().then((allFields:any[])=>{
+            //@Prezentacja
+            let filledTemplate = selectedTemplate.Template;
+            allFields.forEach(field => {
+
+                let fieldValue = this.state.currentItem[field.InternalName];
+                let left = '&#123;';
+                let right = '&#125;';
+                let marker = left+left+field.InternalName+right+right;
+                while(filledTemplate.indexOf(marker)!=-1){
+                    filledTemplate = filledTemplate.replace(marker, fieldValue);
+                }
+            });
+            this.setState({filledTemplate:filledTemplate})
+            
+        });
     }
 
     public render(): React.ReactElement<ICustomPanelProps> {
@@ -119,17 +155,23 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
                             <DefaultButton text="Template Configuration" onClick={this._onConfiguration} iconProps={{iconName:'ConfigurationSolid'}}/>
                         </div>
                         <div className="ms-Grid-col ms-md6" style={{textAlign:"right"}}>
-                            <PrimaryButton text="Print" onClick={this._onPrint} iconProps={{iconName:'Print'}} />
+                            <ReactToPrint
+                                trigger={() => <PrimaryButton text="Print" iconProps={{iconName:'Print'}} />}
+                                content={() => this.previewRef}
+                            />
                         </div>
                     </div> 
                     <br/>
+                    {this.state.selectedTemplate!=null &&
                     <div className="ms-Grid-row">
-                        <div className="ql-container ql-snow">
+                        <p>Preview:</p>
+                        <div className="ql-container ql-snow" ref={(el)=>{this.previewRef=el;}}>
                             <div className="ql-editor">
-                                {this.state.selectedTemplate!=null && ReactHtmlParser(this.state.selectedTemplate.Template)}
+                                {this.state.selectedTemplate!=null && 
+                                    ReactHtmlParser(this.state.filledTemplate)}
                             </div>
                         </div>
-                    </div>
+                    </div>}
                 </div>
                 <Panel 
                     type={PanelType.large}
