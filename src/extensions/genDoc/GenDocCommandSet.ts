@@ -41,6 +41,7 @@ export default class GenDocCommandSet extends BaseListViewCommandSet<IGenDocComm
 
   
     
+    // @Prezentacja_1_SPFX_4: This is the place we created for the panel
     this.panelPlaceHolder = document.body.appendChild(document.createElement("div"));	
   
 
@@ -54,7 +55,7 @@ export default class GenDocCommandSet extends BaseListViewCommandSet<IGenDocComm
   public onListViewUpdated(event: IListViewCommandSetListViewUpdatedParameters): void {
     const compareOneCommand: Command = this.tryGetCommand('COMMAND_1');
     if (compareOneCommand) {
-      // @Prezentacja_1: This command should be hidden unless exactly one row is selected.
+      // @Prezentacja_1_SPFX_1: Show command only if item is selected
       compareOneCommand.visible = event.selectedRows.length === 1;
     }
   }
@@ -62,7 +63,8 @@ export default class GenDocCommandSet extends BaseListViewCommandSet<IGenDocComm
   @override
   public onExecute(event: IListViewCommandSetExecuteEventParameters): void {
     switch (event.itemId) {
-      case 'COMMAND_1':         
+      case 'COMMAND_1':   
+        // @Prezentacja_1_SPFX_2: get item data from selected item      
         let selectedItem = event.selectedRows[0];	        
         const listItemId = selectedItem.getValueByName('ID') as number;	        
         const title = selectedItem.getValueByName("Title");	        
@@ -73,7 +75,8 @@ export default class GenDocCommandSet extends BaseListViewCommandSet<IGenDocComm
     }
   }
 
-  private _showPanel(itemId: number, currentTitle: string) {	    
+  private _showPanel(itemId: number, currentTitle: string) {	
+    // @Prezentacja_1_SPFX_3: render the panel and show it :)      
     this._renderPanelComponent({	      
       isOpen: true,	      
       currentTitle,	      
@@ -89,6 +92,8 @@ export default class GenDocCommandSet extends BaseListViewCommandSet<IGenDocComm
   }
 
   private _renderPanelComponent(props: any) {	    
+    // @Prezentacja_1_SPFX_3: rendering react component :)      
+
     const element: React.ReactElement<ICustomPanelProps> = React.createElement(CustomPanel, assign({
               onClose: null,	      
               currentTitle: null,	      

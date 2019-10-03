@@ -6,7 +6,8 @@ import Configuration from '../Configuration/Configurations';
 import TemplateService from '../../services/TemplateService';
 import ReactHtmlParser from 'react-html-parser';
 import ReactQuill from 'react-quill'; // ES6
-import 'react-quill/dist/quill.snow.css'; // ES6
+import 'react-quill/dist/quill.snow.css'; // ES6 
+// @Prezentacja_4_ReactToPrint_2 ładowanie klas css z edytora quill
 import ItemsService from '../../services/ItemsService';
 import ReactToPrint from "react-to-print";
 
@@ -105,7 +106,7 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
 
         
         this.itemsService.GetAllFields().then((allFields:any[])=>{
-            //@Prezentacja
+                        
             let filledTemplate = selectedTemplate.Template;
             allFields.forEach(field => {
 
@@ -122,6 +123,7 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
         });
     }
 
+    // @Prezentacja_1_SPFX_5 rendering panel content
     public render(): React.ReactElement<ICustomPanelProps> {
         let { isOpen, currentTitle } = this.props;
         return (
@@ -146,7 +148,7 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
                         <div className="ms-Grid-col ms-md6">
                             <DefaultButton text="Template Configuration" onClick={this._onConfiguration} iconProps={{iconName:'ConfigurationSolid'}}/>
                         </div>
-                        <div className="ms-Grid-col ms-md6" style={{textAlign:"right"}}>
+                        <div className="ms-Grid-col ms-md6" style={{textAlign:"right"} /* @Prezentacja_4_ReactToPrint_1 podgląd elementu*/}>
                             <ReactToPrint
                                 trigger={() => <PrimaryButton text="Print" iconProps={{iconName:'Print'}} />}
                                 content={() => this.previewRef}
@@ -157,7 +159,7 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
                     {this.state.selectedTemplate!=null &&
                     <div className="ms-Grid-row">
                         <p>Preview:</p>
-                        <div className="ql-container ql-snow" ref={(el)=>{this.previewRef=el;}}>
+                        <div className="ql-container ql-snow" ref={(el)=>{this.previewRef=el;} /* @Prezentacja_4_ReactToPrint_2 Wykorzystanie refa aby dostać kontener*/}>
                             <div className="ql-editor">
                                 {this.state.selectedTemplate!=null && 
                                     ReactHtmlParser(this.state.filledTemplate)}

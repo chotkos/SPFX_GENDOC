@@ -14,7 +14,7 @@ export default class Configuration extends React.Component<IConfigurationProps, 
     
     private templateService = new TemplateService();
     private itemsService = new ItemsService();
-
+    //@Prezentacja_2_Quill_2 Konfiguracja edytora
     modules = {
         toolbar: [
             [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -77,15 +77,16 @@ export default class Configuration extends React.Component<IConfigurationProps, 
         }});        
     }
  
-
+    //@Prezentacja_1_SPFX_7 Zapis templatki :)
     @autobind
-    private _createConfig(){        
-        //@TODO: saving pnp        
+    private _createConfig(){  
+               
         let createModel = {
             Title : this.state.templateName,
             Template : this.state.templateContent
         }
 
+        //@Prezentacja_3_PNP_1 Przykład użycia PNP.js
         this.templateService.CreateTemplate(createModel).then(r=>{if(r){
             this._closePanel();
         }else{
@@ -104,7 +105,7 @@ export default class Configuration extends React.Component<IConfigurationProps, 
     }
 
     @autobind
-    private fieldClick(field){ //@Prezentacja: dodawanie field tagów
+    private fieldClick(field){ //@Prezentacja_2_Quill_3 dodawanie field tagów
         console.log(this.quillRef, field)
         var range = this.quillRef.current.editor.getSelection();
 
@@ -124,7 +125,7 @@ export default class Configuration extends React.Component<IConfigurationProps, 
 
     }
     
-
+    // @Prezentacja_1_SPFX_6 Rendering configuration screen
     public render(): React.ReactElement<IConfigurationProps> {
         return (                 
             <div className={"ms-Grid "+styles.Configurations}>
@@ -136,6 +137,7 @@ export default class Configuration extends React.Component<IConfigurationProps, 
                                 onChanged={v=>this.setState({templateName:v})}
                             />  
                             <br/>
+                            {false && '' /* @Prezentacja_2_Quill_1 Rendering editor */}
                             <ReactQuill 
                                 value={this.state.templateContent}
                                 onChange={this.quillChange}

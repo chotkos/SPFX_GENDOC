@@ -10,7 +10,7 @@ export default class ItemsService {
    public GetAllFields(): Promise<any>{
         return sp.web.lists.getByTitle(this.itemsListName)
             .fields
-            .filter('Hidden eq false') //@Prezentacja
+            .filter('Hidden eq false') //@Prezentacja_3_PNP_2
             .get()                   
             .then(fields=>{return fields;})
             .catch(e=>{throw e;});        
