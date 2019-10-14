@@ -14,7 +14,7 @@ export default class Configuration extends React.Component<IConfigurationProps, 
     
     private templateService = new TemplateService();
     private itemsService = new ItemsService();
-    //@Prezentacja_2_Quill_2 Konfiguracja edytora
+    //@Prezentacja_2_Quill_2 Konfiguracja edytora - dostępna w dokumentacji quilla
     modules = {
         toolbar: [
             [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -105,12 +105,13 @@ export default class Configuration extends React.Component<IConfigurationProps, 
     }
 
     @autobind
-    private fieldClick(field){ //@Prezentacja_2_Quill_3 dodawanie field tagów
+    private fieldClick(field){ //@Prezentacja_2_Quill_3 dodawanie field tagów - customizacja!
         console.log(this.quillRef, field)
         var range = this.quillRef.current.editor.getSelection();
 
         if (range) { 
             this.quillRef.current.editor.insertText(range.index, `{{${field.name}}}`, 'tag', `{{${field.name}}}`, 'fieldTag');
+            //this.quillRef.current.editor.insertHtml - CUSTOM HTML!
         } else {
             //One day I will implement nice alert here :)
         }

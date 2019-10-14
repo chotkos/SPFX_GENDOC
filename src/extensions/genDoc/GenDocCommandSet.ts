@@ -92,7 +92,7 @@ export default class GenDocCommandSet extends BaseListViewCommandSet<IGenDocComm
   }
 
   private _renderPanelComponent(props: any) {	    
-    // @Prezentacja_1_SPFX_3: rendering react component :)      
+    // @Prezentacja_1_SPFX_4: rendering react component :)      
 
     const element: React.ReactElement<ICustomPanelProps> = React.createElement(CustomPanel, assign({
               onClose: null,	      

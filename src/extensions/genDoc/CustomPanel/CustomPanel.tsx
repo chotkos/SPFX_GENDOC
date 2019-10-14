@@ -103,8 +103,8 @@ export default class CustomPanel extends React.Component<ICustomPanelProps, ICus
             selectedTemplate: selectedTemplate, 
             showConfiguration: false
         }, this.forceUpdate);
-
         
+        //@PRezentacja_4_ReactToPrint_4 podmiana markerów na wartości z danego elementu
         this.itemsService.GetAllFields().then((allFields:any[])=>{
                         
             let filledTemplate = selectedTemplate.Template;
